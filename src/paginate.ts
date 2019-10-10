@@ -7,8 +7,15 @@ import {
 import { Pagination } from "./pagination";
 import { IPaginationOptions } from "./interfaces";
 
-export async function paginate<T>(repository: Repository<T>, options: IPaginationOptions, searchOptions?: FindConditions<T> | FindManyOptions<T>): Promise<Pagination<T>>;
-export async function paginate<T>(queryBuilder: SelectQueryBuilder<T>, options: IPaginationOptions): Promise<Pagination<T>>;
+export async function paginate<T>(
+  repository: Repository<T>,
+  options: IPaginationOptions,
+  searchOptions?: FindConditions<T> | FindManyOptions<T>
+): Promise<Pagination<T>>;
+export async function paginate<T>(
+  queryBuilder: SelectQueryBuilder<T>,
+  options: IPaginationOptions
+): Promise<Pagination<T>>;
 
 export async function paginate<T>(
   repositoryOrQueryBuilder: Repository<T> | SelectQueryBuilder<T>,
