@@ -12,6 +12,7 @@ export async function paginate<T>(
   options: IPaginationOptions,
   searchOptions?: FindConditions<T> | FindManyOptions<T>
 ): Promise<Pagination<T>>;
+
 export async function paginate<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: IPaginationOptions
@@ -28,7 +29,7 @@ export async function paginate<T>(
 }
 
 function createPaginationObject<T>(
-  items: T[],
+  data: T[],
   total: number,
   page: number,
   limit: number,
@@ -42,8 +43,8 @@ function createPaginationObject<T>(
   };
 
   return new Pagination(
-    items,
-    items.length,
+    data,
+    data.length,
     total,
     Math.ceil(total / limit),
     routes.next,
@@ -67,13 +68,13 @@ async function paginateRepo<T>(
 ): Promise<Pagination<T>> {
   const [page, limit, route] = resolveOptions(options);
 
-  const [items, total] = await repository.findAndCount({
+  const [data, total] = await repository.findAndCount({
     skip: page * limit,
     take: limit,
     ...searchOptions
   });
 
-  return createPaginationObject<T>(items, total, page, limit, route);
+  return createPaginationObject<T>(data, total, page, limit, route);
 }
 
 async function paginateQueryBuilder<T>(
@@ -82,10 +83,10 @@ async function paginateQueryBuilder<T>(
 ): Promise<Pagination<T>> {
   const [page, limit, route] = resolveOptions(options);
 
-  const [items, total] = await queryBuilder
+  const [data, total] = await queryBuilder
     .take(limit)
     .offset(page * limit)
     .getManyAndCount();
 
-  return createPaginationObject<T>(items, total, page, limit, route);
+  return createPaginationObject<T>(data, total, page, limit, route);
 }
